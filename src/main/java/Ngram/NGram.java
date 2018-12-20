@@ -8,12 +8,21 @@ import java.util.HashSet;
 
 public class NGram<Symbol> implements Serializable{
 
-    private NGramNode<Symbol> rootNode;
+
+    private NGramNode<Symbol> rootNode; // each node keeps
     private int N;
     private double lambda1, lambda2;
     private boolean interpolated = false;
     private HashSet<Symbol> vocabulary;
     private double[] probabilityOfUnseen;
+
+    /**
+     * Constructor of {@link NGram} class which takes a {@link ArrayList<ArrayList<Symbol>>} corpus and {@link Integer} size of ngram as input.
+     * It adds all sentences of corpus as ngrams.
+     *
+     * @param corpus {@link ArrayList<ArrayList<Symbol>>} list of sentences whose ngrams are added.
+     * @param N size of ngram.
+     */
 
     public NGram(ArrayList<ArrayList<Symbol>> corpus, int N){
         int i;
@@ -25,6 +34,12 @@ public class NGram<Symbol> implements Serializable{
             addNGramSentence((Symbol[]) corpus.get(i).toArray());
     }
 
+    /**
+     * Constructor of {@link NGram} class which takes {@link Integer} size of ngram.
+     *
+     * @param N size of ngram.
+     */
+
     public NGram(int N){
         this.N = N;
         this.vocabulary = new HashSet<>();
@@ -32,14 +47,29 @@ public class NGram<Symbol> implements Serializable{
         rootNode = new NGramNode<Symbol>(null);
     }
 
+    /**
+     *
+     * @return size of ngram.
+     */
+
     public int getN(){
         return N;
     }
+
+    /**
+     * Set size of ngram.
+     * @param N size of ngram
+     */
 
     public void setN(int N){
         this.N = N;
     }
 
+    /**
+     * Add {@link Symbol[]} given array of symbols to {@link HashSet} the vocabulary and to {@link NGramNode} the rootNode
+     *
+     * @param symbols {@link Symbol[]} ngram added.
+     */
     public void addNGram(Symbol[] symbols){
         for (Symbol s : symbols){
             vocabulary.add(s);
@@ -47,6 +77,11 @@ public class NGram<Symbol> implements Serializable{
         rootNode.addNGram(symbols, 0, N);
     }
 
+    /**
+     * Add given sentence to {@link HashSet} the vocabulary and create and add ngrams of the sentence to {@link NGramNode} the rootNode
+     *
+     * @param symbols {@link Symbol[]} sentence whose ngrams are added.
+     */
     public void addNGramSentence(Symbol[] symbols){
         for (Symbol s : symbols){
             vocabulary.add(s);
@@ -56,10 +91,20 @@ public class NGram<Symbol> implements Serializable{
         }
     }
 
+    /**
+     * @return vocabulary size.
+     */
     public double vocabularySize(){
         return vocabulary.size();
     }
 
+    /**
+     * Set lambda, interpolation ratio, for bigram and unigram probabilities.
+     *
+     * ie. lambda1 * bigramProbability + (1 - lambda1) * unigramProbability
+     *
+     * @param lambda1 interpolation ratio for bigram probabilities
+     */
     public void setLambda(double lambda1){
         if (N == 2){
             interpolated = true;
@@ -67,6 +112,13 @@ public class NGram<Symbol> implements Serializable{
         }
     }
 
+    /**
+     * Set lambdas, interpolation ratios, for trigram, bigram and unigram probabilities.
+     * ie. lambda1 * trigramProbability + lambda2 * bigramProbability  + (1 - lambda1 - lambda2) * unigramProbability
+     *
+     * @param lambda1 interpolation ratio for trigram probabilities
+     * @param lambda2 interpolation ratio for bigram probabilities
+     */
     public void setLambda(double lambda1, double lambda2){
         if (N == 3){
             interpolated = true;
@@ -75,17 +127,30 @@ public class NGram<Symbol> implements Serializable{
         }
     }
 
+    /**
+     * Calculate NGram probabilities using {@link ArrayList<ArrayList<Symbol>>} given corpus and {@link TrainedSmoothing<Symbol>} smoothing method.
+     *
+     * @param corpus corpus for calculating ngram probabilities.
+     * @param trainedSmoothing instance of smoothing method for calculating ngram probabilities.
+     */
     public void calculateNGramProbabilities(ArrayList<ArrayList<Symbol>> corpus, TrainedSmoothing<Symbol> trainedSmoothing){
         trainedSmoothing.train(corpus, this);
     }
 
+    /**
+     * Calculate NGram probabilities using {@link SimpleSmoothing} simple smoothing.
+     *
+     * @param simpleSmoothing {@link SimpleSmoothing}
+     */
     public void calculateNGramProbabilities(SimpleSmoothing<Symbol> simpleSmoothing){
         simpleSmoothing.setProbabilities(this);
     }
 
+
     public void calculateNGramProbabilities(SimpleSmoothing<Symbol> simpleSmoothing, int level){
         simpleSmoothing.setProbabilities(this, level);
     }
+
 
     public void replaceUnknownWords(HashSet<Symbol> dictionary){
         rootNode.replaceUnknownWords(dictionary);
@@ -236,6 +301,11 @@ public class NGram<Symbol> implements Serializable{
         probabilityOfUnseen[height - 1] = 1.0 / (vocabularySize() + 1);
     }
 
+    /**
+     * Save this NGram to a file.
+     *
+     * @param fileName {@link String} name of file where NGram is saved.
+     */
     public void save(String fileName){
         FileOutputStream outFile;
         ObjectOutputStream outObject;
