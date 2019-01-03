@@ -8,14 +8,29 @@ public class InterpolatedSmoothing<Symbol> extends TrainedSmoothing{
     private double lambda1, lambda2;
     private SimpleSmoothing<Symbol> simpleSmoothing;
 
+    /**
+     * No argument constructor of {@link InterpolatedSmoothing}
+     */
     public InterpolatedSmoothing(){
         this.simpleSmoothing = new GoodTuringSmoothing<Symbol>();
     }
 
+    /**
+     * Constructor of {@link InterpolatedSmoothing}
+     * @param simpleSmoothing smoothing method.
+     */
     public InterpolatedSmoothing(SimpleSmoothing<Symbol> simpleSmoothing){
         this.simpleSmoothing = simpleSmoothing;
     }
-
+    /**
+     * The algorithm tries to optimize the best lambda for a given corpus. The algorithm uses perplexity on the validation
+     * set as the optimization criterion.
+     *
+     * @param nGrams 10 N-Grams learned for different folds of the corpus. nGrams[i] is the N-Gram trained with i'th train fold of the corpus.
+     * @param kFoldCrossValidation Cross-validation data used in training and testing the N-grams.
+     * @param lowerBound Initial lower bound for optimizing the best lambda.
+     * @return  Best lambda optimized with k-fold crossvalidation.
+     */
     private double learnBestLambda(NGram[] nGrams, KFoldCrossValidation<ArrayList<Symbol>> kFoldCrossValidation, double lowerBound){
         double bestPerplexity, bestPrevious = -1, upperBound = 0.999, perplexity, bestLambda = (lowerBound + upperBound) / 2;
         int numberOfParts = 5;
@@ -48,6 +63,16 @@ public class InterpolatedSmoothing<Symbol> extends TrainedSmoothing{
         return bestLambda;
     }
 
+    /**
+     * The algorithm tries to optimize the best lambdas (lambda1, lambda2) for a given corpus. The algorithm uses perplexity on the validation
+     * set as the optimization criterion.
+     *
+     * @param nGrams 10 N-Grams learned for different folds of the corpus. nGrams[i] is the N-Gram trained with i'th train fold of the corpus.
+     * @param kFoldCrossValidation Cross-validation data used in training and testing the N-grams.
+     * @param lowerBound1 Initial lower bound for optimizing the best lambda1.
+     * @param lowerBound2 Initial lower bound for optimizing the best lambda2.
+     * @return
+     */
     private double[] learnBestLambdas(NGram[] nGrams, KFoldCrossValidation<ArrayList<Symbol>> kFoldCrossValidation, double lowerBound1, double lowerBound2){
         double bestPerplexity, upperBound1 = 0.999, upperBound2 = 0.999, bestPrevious = -1, perplexity, bestLambda1 = (lowerBound1 + upperBound1) / 2, bestLambda2 = (lowerBound1 + upperBound1) / 2;
         ArrayList[] testFolds = new ArrayList[10];
@@ -85,6 +110,12 @@ public class InterpolatedSmoothing<Symbol> extends TrainedSmoothing{
         return new double[]{bestLambda1, bestLambda2};
     }
 
+    /**
+     * Wrapper function to learn the parameters (lambda1 and lambda2) in interpolated smoothing. The function first creates K NGrams
+     * with the train folds of the corpus. Then optimizes lambdas with respect to the test folds of the corpus depending on given N.
+     * @param corpus Train corpus used to optimize lambda parameters
+     * @param N N in N-Gram.
+     */
     @Override
     protected void learnParameters(ArrayList corpus, int N) {
         if (N <= 1){
@@ -110,7 +141,14 @@ public class InterpolatedSmoothing<Symbol> extends TrainedSmoothing{
             }
         }
     }
-
+    /**
+     * Wrapper function to set the N-gram probabilities with interpolated smoothing.
+     * @param nGram N-Gram for which the probabilities will be set.
+     * @param level Level for which N-Gram probabilities will be set. Probabilities for different levels of the
+     *              N-gram can be set with this function. If level = 1, N-Gram is treated as UniGram, if level = 2,
+     *              N-Gram is treated as Bigram, etc.
+     *
+     */
     @Override
     protected void setProbabilities(NGram nGram, int level) {
         for (int j = 2; j<= nGram.getN(); j++){
