@@ -1,7 +1,6 @@
 package Ngram;
 
 import DataStructure.CounterHashMap;
-import Dictionary.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
