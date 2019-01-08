@@ -8,12 +8,21 @@ import java.util.HashSet;
 
 public class NGram<Symbol> implements Serializable{
 
-    private NGramNode<Symbol> rootNode;
+
+    public NGramNode<Symbol> rootNode;
     private int N;
     private double lambda1, lambda2;
     private boolean interpolated = false;
     private HashSet<Symbol> vocabulary;
     private double[] probabilityOfUnseen;
+
+    /**
+     * Constructor of {@link NGram} class which takes a {@link ArrayList<ArrayList<Symbol>>} corpus and {@link Integer} size of ngram as input.
+     * It adds all sentences of corpus as ngrams.
+     *
+     * @param corpus {@link ArrayList<ArrayList<Symbol>>} list of sentences whose ngrams are added.
+     * @param N size of ngram.
+     */
 
     public NGram(ArrayList<ArrayList<Symbol>> corpus, int N){
         int i;
@@ -25,6 +34,12 @@ public class NGram<Symbol> implements Serializable{
             addNGramSentence((Symbol[]) corpus.get(i).toArray());
     }
 
+    /**
+     * Constructor of {@link NGram} class which takes {@link Integer} size of ngram.
+     *
+     * @param N size of ngram.
+     */
+
     public NGram(int N){
         this.N = N;
         this.vocabulary = new HashSet<>();
@@ -32,14 +47,29 @@ public class NGram<Symbol> implements Serializable{
         rootNode = new NGramNode<Symbol>(null);
     }
 
+    /**
+     *
+     * @return size of ngram.
+     */
+
     public int getN(){
         return N;
     }
+
+    /**
+     * Set size of ngram.
+     * @param N size of ngram
+     */
 
     public void setN(int N){
         this.N = N;
     }
 
+    /**
+     * Adds {@link Symbol[]} given array of symbols to {@link HashSet} the vocabulary and to {@link NGramNode} the rootNode
+     *
+     * @param symbols {@link Symbol[]} ngram added.
+     */
     public void addNGram(Symbol[] symbols){
         for (Symbol s : symbols){
             vocabulary.add(s);
@@ -47,6 +77,11 @@ public class NGram<Symbol> implements Serializable{
         rootNode.addNGram(symbols, 0, N);
     }
 
+    /**
+     * Adds given sentence to {@link HashSet} the vocabulary and create and add ngrams of the sentence to {@link NGramNode} the rootNode
+     *
+     * @param symbols {@link Symbol[]} sentence whose ngrams are added.
+     */
     public void addNGramSentence(Symbol[] symbols){
         for (Symbol s : symbols){
             vocabulary.add(s);
@@ -56,10 +91,20 @@ public class NGram<Symbol> implements Serializable{
         }
     }
 
+    /**
+     * @return vocabulary size.
+     */
     public double vocabularySize(){
         return vocabulary.size();
     }
 
+    /**
+     * Sets lambda, interpolation ratio, for bigram and unigram probabilities.
+     *
+     * ie. lambda1 * bigramProbability + (1 - lambda1) * unigramProbability
+     *
+     * @param lambda1 interpolation ratio for bigram probabilities
+     */
     public void setLambda(double lambda1){
         if (N == 2){
             interpolated = true;
@@ -67,6 +112,13 @@ public class NGram<Symbol> implements Serializable{
         }
     }
 
+    /**
+     * Sets lambdas, interpolation ratios, for trigram, bigram and unigram probabilities.
+     * ie. lambda1 * trigramProbability + lambda2 * bigramProbability  + (1 - lambda1 - lambda2) * unigramProbability
+     *
+     * @param lambda1 interpolation ratio for trigram probabilities
+     * @param lambda2 interpolation ratio for bigram probabilities
+     */
     public void setLambda(double lambda1, double lambda2){
         if (N == 3){
             interpolated = true;
@@ -75,22 +127,54 @@ public class NGram<Symbol> implements Serializable{
         }
     }
 
+    /**
+     * Calculates NGram probabilities using {@link ArrayList<ArrayList<Symbol>>} given corpus and {@link TrainedSmoothing<Symbol>} smoothing method.
+     *
+     * @param corpus corpus for calculating NGram probabilities.
+     * @param trainedSmoothing instance of smoothing method for calculating ngram probabilities.
+     */
     public void calculateNGramProbabilities(ArrayList<ArrayList<Symbol>> corpus, TrainedSmoothing<Symbol> trainedSmoothing){
         trainedSmoothing.train(corpus, this);
     }
 
+    /**
+     * Calculates NGram probabilities using {@link SimpleSmoothing} simple smoothing.
+     *
+     * @param simpleSmoothing {@link SimpleSmoothing}
+     */
     public void calculateNGramProbabilities(SimpleSmoothing<Symbol> simpleSmoothing){
         simpleSmoothing.setProbabilities(this);
     }
 
+    /**
+     * Calculates NGram probabilities given {@link SimpleSmoothing} simple smoothing and level.
+     *
+     * @param simpleSmoothing {@link SimpleSmoothing}
+     * @param level Level for which N-Gram probabilities will be set.
+     *
+     */
     public void calculateNGramProbabilities(SimpleSmoothing<Symbol> simpleSmoothing, int level){
         simpleSmoothing.setProbabilities(this, level);
     }
 
+    /**
+     * Replaces words not in {@link HashSet} given dictionary.
+     *
+     * @param dictionary dictionary of known words.
+     */
     public void replaceUnknownWords(HashSet<Symbol> dictionary){
         rootNode.replaceUnknownWords(dictionary);
     }
 
+
+    /**
+     * Constructs a dictionary of nonrare words with given N-Gram level and probability threshold.
+     *
+     * @param level Level for counting words. Counts for different levels of the N-Gram can be set. If level = 1, N-Gram is treated as UniGram, if level = 2,
+     *              N-Gram is treated as Bigram, etc.
+     * @param probability probability threshold for nonrare words.
+     * @return {@link HashSet} nonrare words.
+     */
     public HashSet<Symbol> constructDictionaryWithNonRareWords(int level, double probability){
         HashSet<Symbol> result = new HashSet<>();
         CounterHashMap<Symbol> wordCounter = new CounterHashMap<>();
@@ -104,6 +188,14 @@ public class NGram<Symbol> implements Serializable{
         return result;
     }
 
+    /**
+     * Calculates unigram perplexity of given corpus. First sums negative log likelihoods of all unigrams in corpus.
+     * Then returns exp of average negative log likelihood.
+     *
+     * @param corpus corpus whose unigram perplexity is calculated.
+     *
+     * @return unigram perplexity of corpus.
+     */
     private double getUniGramPerplexity(ArrayList<ArrayList<Symbol>> corpus){
         double sum = 0;
         int count = 0;
@@ -117,6 +209,14 @@ public class NGram<Symbol> implements Serializable{
         return Math.exp(sum / count);
     }
 
+    /**
+     * Calculates bigram perplexity of given corpus. First sums negative log likelihoods of all bigrams in corpus.
+     * Then returns exp of average negative log likelihood.
+     *
+     * @param corpus corpus whose bigram perplexity is calculated.
+     *
+     * @return bigram perplexity of given corpus.
+     */
     private double getBiGramPerplexity(ArrayList<ArrayList<Symbol>> corpus){
         double sum = 0;
         int count = 0;
@@ -133,6 +233,13 @@ public class NGram<Symbol> implements Serializable{
         return Math.exp(sum / count);
     }
 
+    /**
+     * Calculates trigram perplexity of given corpus. First sums negative log likelihoods of all trigrams in corpus.
+     * Then returns exp of average negative log likelihood.
+     *
+     * @param corpus corpus whose trigram perplexity is calculated.
+     * @return trigram perplexity of given corpus.
+     */
     private double getTriGramPerplexity(ArrayList<ArrayList<Symbol>> corpus){
         double sum = 0;
         int count = 0;
@@ -146,6 +253,12 @@ public class NGram<Symbol> implements Serializable{
         return Math.exp(sum / count);
     }
 
+    /**
+     * Calculates the perplexity of given corpus depending on N-Gram model (unigram, bigram, trigram, etc.)
+     *
+     * @param corpus corpus whose perplexity is calculated.
+     * @return perplexity of given corpus
+     */
     public double getPerplexity(ArrayList<ArrayList<Symbol>> corpus){
         switch (N){
             case 1:
@@ -159,6 +272,13 @@ public class NGram<Symbol> implements Serializable{
         }
     }
 
+    /**
+     * Gets probability of sequence of symbols depending on N in N-Gram. If N is 1, returns unigram probability.
+     * If N is 2, if interpolated is true, then returns interpolated bigram and unigram probability, otherwise returns only bigram probability.
+     * If N is 3, if interpolated is true, then returns interpolated trigram, bigram and unigram probability, otherwise returns only trigram probability.
+     * @param symbols sequence of symbol.
+     * @return probability of given sequence.
+     */
     public double getProbability(Symbol ... symbols) {
         switch (N){
             case 1:
@@ -179,10 +299,21 @@ public class NGram<Symbol> implements Serializable{
         return 0.0;
     }
 
+    /**
+     * Gets unigram probability of given symbol.
+     * @param w1 a unigram symbol.
+     * @return probability of given unigram.
+     */
     private double getUniGramProbability(Symbol w1) {
         return rootNode.getUniGramProbability(w1);
     }
 
+    /**
+     * Gets bigram probability of given symbols.
+     * @param w1 first gram of bigram
+     * @param w2 second gram of bigram
+     * @return probability of bigram formed by w1 and w2.
+     */
     private double getBiGramProbability(Symbol w1, Symbol w2) {
         try {
             return rootNode.getBiGramProbability(w1, w2);
@@ -191,6 +322,13 @@ public class NGram<Symbol> implements Serializable{
         }
     }
 
+    /**
+     * Gets trigram probability of given symbols.
+     * @param w1 first gram of trigram
+     * @param w2 second gram of trigram
+     * @param w3 third gram of trigram
+     * @return probability of bigram formed by w1, w2, w3.
+     */
     private double getTriGramProbability(Symbol w1, Symbol w2, Symbol w3) {
         try {
             return rootNode.getTriGramProbability(w1, w2, w3);
@@ -199,10 +337,21 @@ public class NGram<Symbol> implements Serializable{
         }
     }
 
+    /**
+     * Gets count of given sequence of symbol.
+     * @param symbols sequence of symbol.
+     * @return count of symbols.
+     */
     public int getCount(Symbol[] symbols){
         return rootNode.getCount(symbols, 0);
     }
 
+    /**
+     * Sets probabilities by adding pseudocounts given height and pseudocount.
+     * @param pseudoCount pseudocount added to all N-Grams.
+     * @param height  height for N-Gram. If height= 1, N-Gram is treated as UniGram, if height = 2,
+     *                N-Gram is treated as Bigram, etc.
+     */
     public void setProbabilityWithPseudoCount(double pseudoCount, int height){
         double vocabularySize;
         if (pseudoCount != 0){
@@ -214,14 +363,32 @@ public class NGram<Symbol> implements Serializable{
         probabilityOfUnseen[height - 1] = 1.0 / vocabularySize;
     }
 
+    /**
+     * Find maximum occurrence in given height.
+     * @param height height for occurrences. If height = 1, N-Gram is treated as UniGram, if height = 2,
+     *               N-Gram is treated as Bigram, etc.
+     * @return maximum occurrence in given height.
+     */
     private int maximumOccurrence(int height){
         return rootNode.maximumOccurrence(height);
     }
 
+    /**
+     * Update counts of counts of N-Grams with given counts of counts and given height.
+     * @param countsOfCounts updated counts of counts.
+     * @param height  height for NGram. If height = 1, N-Gram is treated as UniGram, if height = 2,
+     *                N-Gram is treated as Bigram, etc.
+     */
     private void updateCountsOfCounts(int[] countsOfCounts, int height){
         rootNode.updateCountsOfCounts(countsOfCounts, height);
     }
 
+    /**
+     * Calculates counts of counts of NGrams.
+     * @param height  height for NGram. If height = 1, N-Gram is treated as UniGram, if height = 2,
+     *                N-Gram is treated as Bigram, etc.
+     * @return counts of counts of NGrams.
+     */
     public int[] calculateCountsOfCounts(int height){
         int maxCount;
         int[] countsOfCounts;
@@ -231,11 +398,23 @@ public class NGram<Symbol> implements Serializable{
         return countsOfCounts;
     }
 
+    /**
+     * Sets probability with given counts of counts and pZero.
+     * @param countsOfCounts counts of counts of NGrams.
+     * @param height  height for NGram. If height = 1, N-Gram is treated as UniGram, if height = 2,
+     *                N-Gram is treated as Bigram, etc.
+     * @param pZero probability of zero.
+     */
     public void setAdjustedProbability(double[] countsOfCounts, int height, double pZero){
         rootNode.setAdjustedProbability(countsOfCounts, height, vocabularySize() + 1, pZero);
         probabilityOfUnseen[height - 1] = 1.0 / (vocabularySize() + 1);
     }
 
+    /**
+     * Save this NGram to a file.
+     *
+     * @param fileName {@link String} name of file where NGram is saved.
+     */
     public void save(String fileName){
         FileOutputStream outFile;
         ObjectOutputStream outObject;
