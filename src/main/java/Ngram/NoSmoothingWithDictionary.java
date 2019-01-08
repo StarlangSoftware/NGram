@@ -1,7 +1,5 @@
 package Ngram;
 
-import Dictionary.*;
-
 import java.util.HashSet;
 
 public class NoSmoothingWithDictionary<Symbol> extends NoSmoothing{
