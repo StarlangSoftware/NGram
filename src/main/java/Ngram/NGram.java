@@ -23,7 +23,6 @@ public class NGram<Symbol> implements Serializable{
      * @param corpus {@link ArrayList<ArrayList<Symbol>>} list of sentences whose ngrams are added.
      * @param N size of ngram.
      */
-
     public NGram(ArrayList<ArrayList<Symbol>> corpus, int N){
         int i;
         this.N = N;
@@ -39,7 +38,6 @@ public class NGram<Symbol> implements Serializable{
      *
      * @param N size of ngram.
      */
-
     public NGram(int N){
         this.N = N;
         this.vocabulary = new HashSet<>();
@@ -51,7 +49,6 @@ public class NGram<Symbol> implements Serializable{
      *
      * @return size of ngram.
      */
-
     public int getN(){
         return N;
     }
@@ -60,7 +57,6 @@ public class NGram<Symbol> implements Serializable{
      * Set size of ngram.
      * @param N size of ngram
      */
-
     public void setN(int N){
         this.N = N;
     }
@@ -327,7 +323,7 @@ public class NGram<Symbol> implements Serializable{
      * @param w1 first gram of trigram
      * @param w2 second gram of trigram
      * @param w3 third gram of trigram
-     * @return probability of bigram formed by w1, w2, w3.
+     * @return probability of trigram formed by w1, w2, w3.
      */
     private double getTriGramProbability(Symbol w1, Symbol w2, Symbol w3) {
         try {

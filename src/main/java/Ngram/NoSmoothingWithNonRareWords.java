@@ -14,6 +14,7 @@ public class NoSmoothingWithNonRareWords<Symbol> extends NoSmoothing{
     public NoSmoothingWithNonRareWords(double probability){
         this.probability = probability;
     }
+
     /**
      * Wrapper function to set the N-gram probabilities with no smoothing and replacing unknown words not found in nonrare words.
      * @param nGram N-Gram for which the probabilities will be set.

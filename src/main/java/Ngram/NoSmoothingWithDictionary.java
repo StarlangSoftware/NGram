@@ -6,8 +6,8 @@ public class NoSmoothingWithDictionary<Symbol> extends NoSmoothing{
     private HashSet<Symbol> dictionary;
 
     /**
-     * No argument constructor of {@link NoSmoothingWithDictionary}
-     * @param dictionary
+     * Constructor of {@link NoSmoothingWithDictionary}
+     * @param dictionary Dictionary to use in smoothing
      */
     public NoSmoothingWithDictionary(HashSet<Symbol> dictionary){
         this.dictionary = dictionary;
@@ -19,7 +19,6 @@ public class NoSmoothingWithDictionary<Symbol> extends NoSmoothing{
      * @param level Level for which N-Gram probabilities will be set. Probabilities for different levels of the
      *              N-gram can be set with this function. If level = 1, N-Gram is treated as UniGram, if level = 2,
      *              N-Gram is treated as Bigram, etc.
-     *
      */
     protected void setProbabilities(NGram nGram, int level) {
         nGram.replaceUnknownWords(dictionary);
