@@ -155,7 +155,7 @@ public class NGram<Symbol> implements Serializable{
     }
 
     /**
-     * Calculates NGram probabilities using {@link ArrayList} given corpus and {@link TrainedSmoothing<Symbol>} smoothing method.
+     * Calculates NGram probabilities using {@link ArrayList} given corpus and {@link TrainedSmoothing} smoothing method.
      *
      * @param corpus corpus for calculating NGram probabilities.
      * @param trainedSmoothing instance of smoothing method for calculating ngram probabilities.

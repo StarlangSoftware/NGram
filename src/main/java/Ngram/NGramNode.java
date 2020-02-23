@@ -1,7 +1,6 @@
 package Ngram;
 
 import DataStructure.CounterHashMap;
-import sun.jvm.hotspot.debugger.cdbg.Sym;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

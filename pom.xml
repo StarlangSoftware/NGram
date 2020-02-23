@@ -6,7 +6,7 @@
 
     <groupId>NlpToolkit</groupId>
     <artifactId>NGram</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -27,11 +27,6 @@
             <groupId>NlpToolkit</groupId>
             <artifactId>DataStructure</artifactId>
             <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>NlpToolkit</groupId>
-            <artifactId>Dictionary</artifactId>
-            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>NlpToolkit</groupId>
