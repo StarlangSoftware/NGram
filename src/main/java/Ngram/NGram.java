@@ -54,17 +54,20 @@ public class NGram<Symbol> implements Serializable{
      */
     public NGram(String fileName){
         String line;
+        String[] items;
         int vocabularySize;
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
             line = br.readLine();
-            String[] items = line.split(" ");
+            items = line.split(" ");
             this.N = Integer.parseInt(items[0]);
             this.lambda1 = Double.parseDouble(items[1]);
             this.lambda2 = Double.parseDouble(items[2]);
             this.probabilityOfUnseen = new double[N];
+            line = br.readLine();
+            items = line.split(" ");
             for (int i = 0; i < N; i++){
-                this.probabilityOfUnseen[i] = Double.parseDouble(br.readLine());
+                this.probabilityOfUnseen[i] = Double.parseDouble(items[i]);
             }
             this.vocabulary = new HashSet<>();
             vocabularySize = Integer.parseInt(br.readLine());
@@ -448,7 +451,7 @@ public class NGram<Symbol> implements Serializable{
                 fw.write(probabilityOfUnseen[i] + " ");
             }
             fw.write("\n");
-            fw.write(vocabularySize() + "\n");
+            fw.write((int) vocabularySize() + "\n");
             for (Symbol symbol : vocabulary){
                 fw.write(symbol.toString() + "\n");
             }

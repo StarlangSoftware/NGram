@@ -39,9 +39,9 @@ public class NGramNode<Symbol> implements Serializable {
     public NGramNode(boolean isRootNode, BufferedReader br) {
         try {
             if (!isRootNode) {
-                this.symbol = (Symbol) br.readLine();
+                this.symbol = (Symbol) br.readLine().trim();
             }
-            String line = br.readLine();
+            String line = br.readLine().trim();
             String[] items = line.split(" ");
             this.count = Integer.parseInt(items[0]);
             this.probability = Double.parseDouble(items[1]);
@@ -142,8 +142,6 @@ public class NGramNode<Symbol> implements Serializable {
             double sum = childSum() + pseudoCount * vocabularySize;
             for (NGramNode<Symbol> child : children.values()) {
                 child.probability = (child.count + pseudoCount) / sum;
-                System.out.println(child.symbol + " " + child.count + " " + child.probability);
-
             }
             if (unknown != null) {
                 unknown.probability = (unknown.count + pseudoCount) / sum;
@@ -219,7 +217,6 @@ public class NGramNode<Symbol> implements Serializable {
             if (children == null) {
                 children = new HashMap<>();
             }
-            System.out.println("child " + symbol.toString());
             children.put(symbol, child);
         }
         child.count++;
@@ -396,9 +393,13 @@ public class NGramNode<Symbol> implements Serializable {
             for (int i = 0; i < level; i++) {
                 fw.write("\t");
             }
-            fw.write(count + " " + probability + " " + probabilityOfUnseen + " " + size() + "\n");
-            for (NGramNode<Symbol> child : children.values()) {
-                child.saveAsText(false, fw, level + 1);
+            if (children != null){
+                fw.write(count + " " + probability + " " + probabilityOfUnseen + " " + size() + "\n");
+                for (NGramNode<Symbol> child : children.values()) {
+                    child.saveAsText(false, fw, level + 1);
+                }
+            } else {
+                fw.write(count + " " + probability + " " + probabilityOfUnseen + " 0\n");
             }
         } catch (IOException e) {
         }
