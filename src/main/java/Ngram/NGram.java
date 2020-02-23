@@ -3,7 +3,9 @@ package Ngram;
 import DataStructure.CounterHashMap;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class NGram<Symbol> implements Serializable{
@@ -17,10 +19,10 @@ public class NGram<Symbol> implements Serializable{
     private double[] probabilityOfUnseen;
 
     /**
-     * Constructor of {@link NGram} class which takes a {@link ArrayList<ArrayList<Symbol>>} corpus and {@link Integer} size of ngram as input.
+     * Constructor of {@link NGram} class which takes a {@link ArrayList} corpus and {@link Integer} size of ngram as input.
      * It adds all sentences of corpus as ngrams.
      *
-     * @param corpus {@link ArrayList<ArrayList<Symbol>>} list of sentences whose ngrams are added.
+     * @param corpus {@link ArrayList} list of sentences whose ngrams are added.
      * @param N size of ngram.
      */
     public NGram(ArrayList<ArrayList<Symbol>> corpus, int N){
@@ -41,8 +43,38 @@ public class NGram<Symbol> implements Serializable{
     public NGram(int N){
         this.N = N;
         this.vocabulary = new HashSet<>();
-        probabilityOfUnseen = new double[N];
-        rootNode = new NGramNode<Symbol>(null);
+        this.probabilityOfUnseen = new double[N];
+        rootNode = new NGramNode<>(null);
+    }
+
+    /**
+     * Constructor of {@link NGram} class which takes filename to read from text file.
+     *
+     * @param fileName name of the text file where NGram is saved.
+     */
+    public NGram(String fileName){
+        String line;
+        int vocabularySize;
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
+            line = br.readLine();
+            String[] items = line.split(" ");
+            this.N = Integer.parseInt(items[0]);
+            this.lambda1 = Double.parseDouble(items[1]);
+            this.lambda2 = Double.parseDouble(items[2]);
+            this.probabilityOfUnseen = new double[N];
+            for (int i = 0; i < N; i++){
+                this.probabilityOfUnseen[i] = Double.parseDouble(br.readLine());
+            }
+            this.vocabulary = new HashSet<>();
+            vocabularySize = Integer.parseInt(br.readLine());
+            for (int i = 0; i < vocabularySize; i++){
+                this.vocabulary.add((Symbol) br.readLine());
+            }
+            rootNode = new NGramNode<>(true, br);
+            br.close();
+        } catch (IOException e) {
+        }
     }
 
     /**
@@ -67,9 +99,7 @@ public class NGram<Symbol> implements Serializable{
      * @param symbols {@link Symbol[]} ngram added.
      */
     public void addNGram(Symbol[] symbols){
-        for (Symbol s : symbols){
-            vocabulary.add(s);
-        }
+        vocabulary.addAll(Arrays.asList(symbols));
         rootNode.addNGram(symbols, 0, N);
     }
 
@@ -79,9 +109,7 @@ public class NGram<Symbol> implements Serializable{
      * @param symbols {@link Symbol[]} sentence whose ngrams are added.
      */
     public void addNGramSentence(Symbol[] symbols){
-        for (Symbol s : symbols){
-            vocabulary.add(s);
-        }
+        vocabulary.addAll(Arrays.asList(symbols));
         for (int j = 0; j < symbols.length - N + 1; j++){
             rootNode.addNGram(symbols, j, N);
         }
@@ -124,7 +152,7 @@ public class NGram<Symbol> implements Serializable{
     }
 
     /**
-     * Calculates NGram probabilities using {@link ArrayList<ArrayList<Symbol>>} given corpus and {@link TrainedSmoothing<Symbol>} smoothing method.
+     * Calculates NGram probabilities using {@link ArrayList} given corpus and {@link TrainedSmoothing<Symbol>} smoothing method.
      *
      * @param corpus corpus for calculating NGram probabilities.
      * @param trainedSmoothing instance of smoothing method for calculating ngram probabilities.
@@ -195,9 +223,9 @@ public class NGram<Symbol> implements Serializable{
     private double getUniGramPerplexity(ArrayList<ArrayList<Symbol>> corpus){
         double sum = 0;
         int count = 0;
-        for (int i = 0; i < corpus.size(); i++){
-            for (int j = 0; j < corpus.get(i).size(); j++){
-                double p = getProbability(corpus.get(i).get(j));
+        for (ArrayList<Symbol> symbols : corpus) {
+            for (Symbol symbol : symbols) {
+                double p = getProbability(symbol);
                 sum -= Math.log(p);
                 count++;
             }
@@ -216,10 +244,10 @@ public class NGram<Symbol> implements Serializable{
     private double getBiGramPerplexity(ArrayList<ArrayList<Symbol>> corpus){
         double sum = 0;
         int count = 0;
-        for (int i = 0; i < corpus.size(); i++){
-            for (int j = 0; j < corpus.get(i).size() - 1; j++){
-                double p = getProbability(corpus.get(i).get(j), corpus.get(i).get(j + 1));
-                if (p == 0){
+        for (ArrayList<Symbol> symbols : corpus) {
+            for (int j = 0; j < symbols.size() - 1; j++) {
+                double p = getProbability(symbols.get(j), symbols.get(j + 1));
+                if (p == 0) {
                     System.out.println("Zero probability");
                 }
                 sum -= Math.log(p);
@@ -239,9 +267,9 @@ public class NGram<Symbol> implements Serializable{
     private double getTriGramPerplexity(ArrayList<ArrayList<Symbol>> corpus){
         double sum = 0;
         int count = 0;
-        for (int i = 0; i < corpus.size(); i++){
-            for (int j = 0; j < corpus.get(i).size() - 2; j++){
-                double p = getProbability(corpus.get(i).get(j), corpus.get(i).get(j + 1), corpus.get(i).get(j + 2));
+        for (ArrayList<Symbol> symbols : corpus) {
+            for (int j = 0; j < symbols.size() - 2; j++) {
+                double p = getProbability(symbols.get(j), symbols.get(j + 1), symbols.get(j + 2));
                 sum -= Math.log(p);
                 count++;
             }
@@ -404,6 +432,30 @@ public class NGram<Symbol> implements Serializable{
     public void setAdjustedProbability(double[] countsOfCounts, int height, double pZero){
         rootNode.setAdjustedProbability(countsOfCounts, height, vocabularySize() + 1, pZero);
         probabilityOfUnseen[height - 1] = 1.0 / (vocabularySize() + 1);
+    }
+
+    /**
+     * Save this NGram to a text file.
+     *
+     * @param fileName {@link String} name of file where NGram is saved.
+     */
+    public void saveAsText(String fileName){
+        BufferedWriter fw;
+        try {
+            fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8));
+            fw.write(N + " " + lambda1 + " " + lambda2 + "\n");
+            for (int i = 0; i < N; i++){
+                fw.write(probabilityOfUnseen[i] + " ");
+            }
+            fw.write("\n");
+            fw.write(vocabularySize() + "\n");
+            for (Symbol symbol : vocabulary){
+                fw.write(symbol.toString() + "\n");
+            }
+            rootNode.saveAsText(true, fw, 0);
+            fw.close();
+        } catch (IOException e) {
+        }
     }
 
     /**
