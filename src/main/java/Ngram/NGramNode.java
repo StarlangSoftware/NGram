@@ -380,7 +380,9 @@ public class NGramNode<Symbol> implements Serializable {
     /**
      * Save this NGramNode to a text file.
      *
+     * @param isRootNode True if this not is a root node, false otherwise
      * @param fw {@link BufferedWriter} file where NGram is saved.
+     * @param level Level of this node.
      */
     public void saveAsText(boolean isRootNode, BufferedWriter fw, int level) {
         try {
