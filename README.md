@@ -1,6 +1,8 @@
 # NGram
 For Developers
 ============
+You can also see either [Python](https://github.com/olcaytaner/NGram-Py) 
+or [C++](https://github.com/olcaytaner/NGram-CPP) repository.
 
 ## Requirements
 
