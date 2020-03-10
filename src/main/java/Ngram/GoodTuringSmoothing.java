@@ -55,6 +55,7 @@ public class GoodTuringSmoothing<Symbol> extends SimpleSmoothing {
                 N[i] = Math.exp(Math.log(i) * w1 + w0);
             }
         } catch (DeterminantZero | MatrixColumnMismatch columnMismatch) {
+        } catch (MatrixNotSquare matrixNotSquare) {
         }
         return N;
     }
