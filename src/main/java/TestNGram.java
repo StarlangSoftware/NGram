@@ -11,11 +11,11 @@ public class TestNGram {
     public static void example(){
         NGram<String> nGram;
         NGram<String> nGram2;
-        String[] text1 = {"ali", "topu", "at", "mehmet", "ayşe", "gitti"};
-        String[] text2 = {"ali", "top", "at", "ayşe", "gitti"};
-        String[] text3 = {"ayşe", "kitabı", "ver"};
+        String[] text1 = {"ali", "topu", "at", "mehmet", "ayse", "gitti"};
+        String[] text2 = {"ali", "top", "at", "ayse", "gitti"};
+        String[] text3 = {"ayse", "evi", "ver"};
         String[] text4 = {"ali", "topu", "mehmete", "at"};
-        String[] text5 = {"ali", "topu", "at", "mehmet", "ayşe", "gitti"};
+        String[] text5 = {"ali", "topu", "at", "mehmet", "ayse", "gitti"};
         nGram = new NGram<String>(2);
         nGram.addNGramSentence(text1);
         nGram.addNGramSentence(text2);
@@ -53,7 +53,5 @@ public class TestNGram {
         nGram2.calculateNGramProbabilities(new NoSmoothing<>());
         double p1 = nGram2.getProbability("cam", "bardak");
         System.out.println(p1);
-        double p2 = nGram2.getProbability("cam", "ağaç");
-        System.out.println(p2);
     }
 }
