@@ -84,18 +84,7 @@ Use below line to generate jar file:
 
      mvn install
 
-
-------------------------------------------------
-
-NGram
-============
-+ [Maven Usage](#maven-usage)
-+ [Training NGram](#training-ngram)
-+ [Saving NGram](#saving-ngram)
-+ [Loading NGram](#loading-ngram)
-
-
-### Maven Usage
+## Maven Usage
 
 	<dependency>
   	<groupId>NlpToolkit</groupId>
@@ -103,80 +92,97 @@ NGram
   	<version>1.0.1</version>
 	</dependency>
 
+------------------------------------------------
+
+Detailed Description
+============
++ [Training NGram](#training-ngram)
++ [Using NGram](#using-ngram)
++ [Saving NGram](#saving-ngram)
++ [Loading NGram](#loading-ngram)
+
 ## Training NGram
      
+Boş bir NGram modeli oluşturmak için
 
-* `NGram` can be created and trained either by using `addNGram()` method or using a `Corpus` as follows:  
-    * Using `addNGram()`,
-    
-            Sentence sentence = new Sentence("Yarın okula gideceğim");
-            NGram ngram = new NGram(1);
-            ngram.addNGram(sentence.getWords().toArray());
-            
-    * Using a `Corpus`,
-    
-            Corpus corpus = new Corpus("corpus.txt"); 
-            NGram ngram = new NGram(corpus.getAllWordsAsArrayList(), 1);
-        
-* *To use `Corpus`,  snippet below should be added to dependencies.*
-        
-                <dependency>
-                    <groupId>NlpToolkit</groupId>
-                    <artifactId>Corpus</artifactId>
-                    <version>1.0.0</version>
-                </dependency>        
-* To calculate probabilities, there are possible smoothing methods. These smoothing methods are divided into two categories as `SimpleSmoothing` and `TrainedSmoothing`. Their usages are as follows:     
-    * `SimpleSmooting` methods are:
-        * `LaplaceSmoothing`
-    
-                ngram.calculateNGramProbabilities(new LaplaceSmoothing());
-                
-        * `GoodTuringSmoothing`
-        
-                ngram.calculateNGramProbabilities(new GoodTuringSmoothing());
-                
-        * `NoSmoothing`
-                
-                ngram.calculateNGramProbabilities(new NoSmoothing());
+	NGram(int N)
 
-        * `NoSmoothingWithDictionary`
-        
-            A dictionary of nonrare words are required to initialize this. This can be created as follows and then probabilities can be calculated:
-                
-                HashSet<Symbol> dictionary = ngram.constructDictionaryWithNonRareWords(1, 0.1);
-                ngram.calculateNGramProbabilities(new NoSmoothingWithDictionary(dictionary));
-                
-        * `NoSmoothingWithNonRareWords`
-                
-                ngram.calculateNGramProbabilities(new NoSmoothingWithNonRareWords(0.1));
+Örneğin,
 
-    * `TrainedSmoothing` methods are:
-        * `AdditiveSmoothing`
-                
-                ngram.calculateNGramProbabilities(corpus.getAllWordsAsArrayList(), new InterpolatedSmoothing());
-        * `InterpolatedSmoothing`               
-            
-                ngram.calculateNGramProbabilities(corpus.getAllWordsAsArrayList(), new AdditiveSmoothing<>());
+	a = NGram(2);
+
+boş bir bigram modeli oluşturulmaktadır.
+
+NGram'a bir cümle eklemek için
+
+	void addNGramSentence(Symbol[] symbols)
+
+Örneğin,
+
+	String[] text1 = {"ali", "topu", "at", "mehmet", "ayşe", "gitti"};
+	String[] text2 = {"ali", "top", "at", "ayşe", "gitti"};
+	nGram = new NGram<String>(2);
+	nGram.addNGramSentence(text1);
+	nGram.addNGramSentence(text2);
+
+satırları ile boş bir bigram oluşturulup, text1 ve text2 cümleleri bigram modeline 
+eklenir.
+
+NoSmoothing sınıfı smoothing için kullanılan en basit tekniktir. Eğitim gerektirmez, sadece
+sayaçlar kullanılarak olasılıklar hesaplanır. Örneğin verilen bir NGram'ın NoSmoothing ile 
+olasılıklarının hesaplanması için
+
+	a.calculateNGramProbabilities(new NoSmoothing());
+
+LaplaceSmoothing sınıfı smoothing için kullanılan basit bir yumuşatma tekniğidir. Eğitim 
+gerektirmez, her sayaca 1 eklenerek olasılıklar hesaplanır. Örneğin verilen bir NGram'ın 
+LaplaceSmoothing ile olasılıklarının hesaplanması için
+
+	a.calculateNGramProbabilities(new LaplaceSmoothing());
+
+GoodTuringSmoothing sınıfı smoothing için kullanılan eğitim gerektirmeyen karmaşık bir 
+yumuşatma tekniğidir. Verilen bir NGram'ın GoodTuringSmoothing ile olasılıklarının 
+hesaplanması için
+
+	a.calculateNGramProbabilities(new GoodTuringSmoothing());
+
+AdditiveSmoothing sınıfı smoothing için kullanılan eğitim gerektiren bir yumuşatma 
+tekniğidir.
+
+	a.calculateNGramProbabilities(new AdditiveSmoothing());
+
+## Using NGram
+
+Bir NGram'ın olasılığını bulmak için
+
+	double getProbability(Symbol ... symbols)
+
+Örneğin, bigram olasılığını bulmak için
+
+	a.getProbability("ali", "topu")
+
+trigram olasılığını bulmak için
+
+	a.getProbability("ali", "topu", "at")
 
 ## Saving NGram
     
-* NGrams can be saved to a file as follows:
+NGram modelini kaydetmek için
 
-        ngram.save("ngram.model");
-              
+	void saveAsText(String fileName)
+
+Örneğin, a modelini "model.txt" dosyasına kaydetmek için
+
+	a.saveAsText("model.txt");              
 
 ## Loading NGram            
-* Loading from an existing model:
- 
-        try {
-            FileInputStream inFile = new FileInputStream("ngram.model");  
-            ObjectInputStream inObject = new ObjectInputStream(inFile);
-            NGram ngram = (NGram<Word>) inObject.readObject();
-        }catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
- 
 
-            
+Var olan bir NGram modelini yüklemek için
 
+	NGram(String fileName)
 
+Örneğin,
+
+	a = NGram("model.txt");
+
+model.txt dosyasında bulunan bir NGram modelini yükler.
