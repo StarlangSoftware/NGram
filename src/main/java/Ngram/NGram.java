@@ -311,12 +311,22 @@ public class NGram<Symbol> implements Serializable{
             case 1:
                 return getUniGramProbability(symbols[0]);
             case 2:
+                if (symbols.length == 1){
+                    return getUniGramProbability(symbols[0]);
+                }
                 if (interpolated){
                     return lambda1 * getBiGramProbability(symbols[0], symbols[1]) + (1 - lambda1) * getUniGramProbability(symbols[1]);
                 } else {
                     return getBiGramProbability(symbols[0], symbols[1]);
                 }
             case 3:
+                if (symbols.length == 1){
+                    return getUniGramProbability(symbols[0]);
+                } else {
+                    if (symbols.length == 2){
+                        return getBiGramProbability(symbols[0], symbols[1]);
+                    }
+                }
                 if (interpolated){
                     return lambda1 * getTriGramProbability(symbols[0], symbols[1], symbols[2]) + lambda2 * getBiGramProbability(symbols[1], symbols[2]) + (1 - lambda1 - lambda2) * getUniGramProbability(symbols[2]);
                 } else {
