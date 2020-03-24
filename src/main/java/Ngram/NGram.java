@@ -112,9 +112,18 @@ public class NGram<Symbol> implements Serializable{
      * @param symbols {@link Symbol[]} sentence whose ngrams are added.
      */
     public void addNGramSentence(Symbol[] symbols){
+        addNGramSentence(symbols, 1);
+    }
+
+    /**
+     * Adds given sentence count times to {@link HashSet} the vocabulary and create and add ngrams of the sentence to {@link NGramNode} the rootNode
+     *
+     * @param symbols {@link Symbol[]} sentence whose ngrams are added.
+     */
+    public void addNGramSentence(Symbol[] symbols, int count){
         vocabulary.addAll(Arrays.asList(symbols));
         for (int j = 0; j < symbols.length - N + 1; j++){
-            rootNode.addNGram(symbols, j, N);
+            rootNode.addNGram(symbols, j, N, count);
         }
     }
 

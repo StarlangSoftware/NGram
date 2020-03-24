@@ -203,6 +203,19 @@ public class NGramNode<Symbol> implements Serializable {
      *               N-Gram is treated as Bigram, etc.
      */
     void addNGram(Symbol[] s, int index, int height) {
+        addNGram(s, index, height, 1);
+    }
+
+    /**
+     * Adds count times NGram given as array of symbols to the node as a child.
+     *
+     * @param s      array of symbols
+     * @param index  start index of NGram
+     * @param height height for NGram. if height = 1, If level = 1, N-Gram is treated as UniGram, if level = 2,
+     *               N-Gram is treated as Bigram, etc.
+     * @param count  Number of times this NGram is added.
+     */
+    void addNGram(Symbol[] s, int index, int height, int count) {
         NGramNode<Symbol> child;
         if (height == 0) {
             return;
@@ -218,7 +231,7 @@ public class NGramNode<Symbol> implements Serializable {
             }
             children.put(symbol, child);
         }
-        child.count++;
+        child.count += count;
         child.addNGram(s, index + 1, height - 1);
     }
 
