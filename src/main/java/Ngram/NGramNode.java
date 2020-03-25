@@ -232,7 +232,7 @@ public class NGramNode<Symbol> implements Serializable {
             children.put(symbol, child);
         }
         child.count += count;
-        child.addNGram(s, index + 1, height - 1);
+        child.addNGram(s, index + 1, height - 1, count);
     }
 
     /**

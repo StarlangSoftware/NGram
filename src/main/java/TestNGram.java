@@ -1,5 +1,4 @@
 import Ngram.NGram;
-import Ngram.NoSmoothing;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,12 +46,6 @@ public class TestNGram {
     }
 
     public static void main(String[] args){
-        NGram<String> nGram2;
-        nGram2 = new NGram<>("model2.txt");
-        nGram2.calculateNGramProbabilities(new NoSmoothing<>());
-        double p1 = nGram2.getProbability("cam", "bardak");
-        System.out.println(p1);
-        double p2 = nGram2.getProbability("çam", "ağaç");
-        System.out.println(p2);
+        example();
     }
 }
