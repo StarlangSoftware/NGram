@@ -406,7 +406,11 @@ public class NGram<Symbol> implements Serializable{
             vocabularySize = vocabularySize();
         }
         rootNode.setProbabilityWithPseudoCount(pseudoCount, height, vocabularySize);
-        probabilityOfUnseen[height - 1] = 1.0 / vocabularySize;
+        if (pseudoCount != 0){
+            probabilityOfUnseen[height - 1] = 1.0 / vocabularySize;
+        } else {
+            probabilityOfUnseen[height - 1] = 0.0;
+        }
     }
 
     /**

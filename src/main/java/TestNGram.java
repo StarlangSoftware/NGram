@@ -1,4 +1,6 @@
+import Ngram.LaplaceSmoothing;
 import Ngram.NGram;
+import Ngram.NoSmoothing;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,6 +23,8 @@ public class TestNGram {
         nGram.addNGramSentence(text4);
         nGram.addNGramSentence(text5);
         nGram.saveAsText("deneme.txt");
+        nGram.calculateNGramProbabilities(new NoSmoothing<>());
+        System.out.println(nGram.getProbability("ali", "kırk"));
         nGram2 = new NGram<>("deneme.txt");
         nGram2.saveAsText("deneme2.txt");
     }
