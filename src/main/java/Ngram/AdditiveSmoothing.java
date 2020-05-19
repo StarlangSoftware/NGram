@@ -74,4 +74,12 @@ public class AdditiveSmoothing<Symbol> extends TrainedSmoothing {
     protected void setProbabilities(NGram nGram, int level) {
         nGram.setProbabilityWithPseudoCount(delta, level);
     }
+
+    /**
+     * Gets the best delta.
+     * @return Learned best delta.
+     */
+    public double getDelta(){
+        return delta;
+    }
 }
