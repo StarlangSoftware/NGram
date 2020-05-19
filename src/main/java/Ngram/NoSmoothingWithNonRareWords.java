@@ -9,7 +9,7 @@ public class NoSmoothingWithNonRareWords<Symbol> extends NoSmoothing{
     /**
      * Constructor of {@link NoSmoothingWithNonRareWords}
      *
-     * @param probability
+     * @param probability Setter for the probability.
      */
     public NoSmoothingWithNonRareWords(double probability){
         this.probability = probability;
