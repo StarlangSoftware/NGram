@@ -6,13 +6,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class AdditiveSmoothingTest extends SimpleSmoothingTest{
-    AdditiveSmoothing<String> additiveSmoothing;
     double delta1, delta2, delta3;
 
     @Before
     public void setUp() throws Exception{
         super.setUp();
-        additiveSmoothing = new AdditiveSmoothing<String>();
+        AdditiveSmoothing<String> additiveSmoothing = new AdditiveSmoothing<String>();
         complexUniGram.calculateNGramProbabilities(validationCorpus, additiveSmoothing);
         delta1 = additiveSmoothing.getDelta();
         complexBiGram.calculateNGramProbabilities(validationCorpus, additiveSmoothing);

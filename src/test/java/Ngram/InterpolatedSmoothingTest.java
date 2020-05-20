@@ -6,12 +6,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class InterpolatedSmoothingTest extends SimpleSmoothingTest{
-    InterpolatedSmoothing<String> interpolatedSmoothing;
 
     @Before
     public void setUp() throws Exception{
         super.setUp();
-        interpolatedSmoothing = new InterpolatedSmoothing<>();
+        InterpolatedSmoothing<String> interpolatedSmoothing = new InterpolatedSmoothing<>();
         complexBiGram.calculateNGramProbabilities(validationCorpus, interpolatedSmoothing);
         complexTriGram.calculateNGramProbabilities(validationCorpus, interpolatedSmoothing);
     }

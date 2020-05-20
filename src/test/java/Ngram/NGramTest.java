@@ -60,13 +60,11 @@ public class NGramTest extends CorpusTest{
 
     @Test
     public void testVocabularySizeSimple(){
-        simpleUniGram = new NGram<>(simpleCorpus, 1);
         assertEquals(15, simpleUniGram.vocabularySize(), 0.0);
     }
 
     @Test
     public void testVocabularySizeComplex(){
-        complexUniGram = new NGram<>(trainCorpus, 1);
         assertEquals(57625, complexUniGram.vocabularySize(), 0.0);
         complexUniGram = new NGram<>(testCorpus, 1);
         assertEquals(55485, complexUniGram.vocabularySize(), 0.0);
