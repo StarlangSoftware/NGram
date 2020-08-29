@@ -5,8 +5,6 @@ import org.junit.Before;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
-
 public class SimpleSmoothingTest extends CorpusTest{
     NGram<String> simpleUniGram, simpleBiGram, simpleTriGram;
     NGram<String> complexUniGram, complexBiGram, complexTriGram;
