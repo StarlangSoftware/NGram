@@ -56,27 +56,31 @@ public class NGram<Symbol> implements Serializable{
         String line;
         String[] items;
         int vocabularySize;
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
-            line = br.readLine();
-            items = line.split(" ");
-            this.N = Integer.parseInt(items[0]);
-            this.lambda1 = Double.parseDouble(items[1]);
-            this.lambda2 = Double.parseDouble(items[2]);
-            this.probabilityOfUnseen = new double[N];
-            line = br.readLine();
-            items = line.split(" ");
-            for (int i = 0; i < N; i++){
-                this.probabilityOfUnseen[i] = Double.parseDouble(items[i]);
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+        if (inputStream != null){
+            try {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+                line = br.readLine();
+                items = line.split(" ");
+                this.N = Integer.parseInt(items[0]);
+                this.lambda1 = Double.parseDouble(items[1]);
+                this.lambda2 = Double.parseDouble(items[2]);
+                this.probabilityOfUnseen = new double[N];
+                line = br.readLine();
+                items = line.split(" ");
+                for (int i = 0; i < N; i++){
+                    this.probabilityOfUnseen[i] = Double.parseDouble(items[i]);
+                }
+                this.vocabulary = new HashSet<>();
+                vocabularySize = Integer.parseInt(br.readLine());
+                for (int i = 0; i < vocabularySize; i++){
+                    this.vocabulary.add((Symbol) br.readLine());
+                }
+                rootNode = new NGramNode<>(true, br);
+                br.close();
+            } catch (IOException e) {
             }
-            this.vocabulary = new HashSet<>();
-            vocabularySize = Integer.parseInt(br.readLine());
-            for (int i = 0; i < vocabularySize; i++){
-                this.vocabulary.add((Symbol) br.readLine());
-            }
-            rootNode = new NGramNode<>(true, br);
-            br.close();
-        } catch (IOException e) {
         }
     }
 
