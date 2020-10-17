@@ -2,10 +2,7 @@ package Ngram;
 
 import DataStructure.CounterHashMap;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -54,6 +51,31 @@ public class NGramNode<Symbol> implements Serializable {
                 }
             }
         } catch (IOException e) {
+        }
+    }
+
+    /**
+     * Constructor of {@link NGramNode}
+     *
+     * @param isRootNode True if this node is root node, false otherwise.
+     * @param multipleFile Multiple file structure to read the nGram.
+     */
+    public NGramNode(boolean isRootNode, MultipleFile multipleFile) {
+        if (!isRootNode) {
+            this.symbol = (Symbol) multipleFile.readLine().trim();
+        }
+        String line = multipleFile.readLine().trim();
+        String[] items = line.split(" ");
+        this.count = Integer.parseInt(items[0]);
+        this.probability = Double.parseDouble(items[1]);
+        this.probabilityOfUnseen = Double.parseDouble(items[2]);
+        int numberOfChildren = Integer.parseInt(items[3]);
+        if (numberOfChildren > 0){
+            children = new HashMap<>();
+            for (int i = 0; i < numberOfChildren; i++){
+                NGramNode<Symbol> childNode = new NGramNode<Symbol>(false, multipleFile);
+                children.put(childNode.symbol, childNode);
+            }
         }
     }
 

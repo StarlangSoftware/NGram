@@ -79,4 +79,13 @@ public class NGramTest extends CorpusTest{
         simpleTriGram.saveAsText("simple3.txt");
     }
 
+    @Test
+    public void testLoadMultiPart(){
+        simpleUniGram = new NGram<String>("simple1part1.txt", "simple1part2.txt");
+        simpleBiGram = new NGram<String>("simple2part1.txt", "simple2part2.txt", "simple2part3.txt");
+        simpleTriGram = new NGram<String>("simple3part1.txt", "simple3part2.txt", "simple3part3.txt", "simple3part4.txt");
+        testGetCountSimple();
+        testVocabularySizeSimple();
+    }
+
 }

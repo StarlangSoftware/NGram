@@ -47,41 +47,60 @@ public class NGram<Symbol> implements Serializable{
         rootNode = new NGramNode<>(null);
     }
 
+    public void readHeader(BufferedReader br){
+        String line;
+        String[] items;
+        int vocabularySize;
+        try {
+            line = br.readLine();
+            items = line.split(" ");
+            this.N = Integer.parseInt(items[0]);
+            this.lambda1 = Double.parseDouble(items[1]);
+            this.lambda2 = Double.parseDouble(items[2]);
+            this.probabilityOfUnseen = new double[N];
+            line = br.readLine();
+            items = line.split(" ");
+            for (int i = 0; i < N; i++){
+                this.probabilityOfUnseen[i] = Double.parseDouble(items[i]);
+            }
+            this.vocabulary = new HashSet<>();
+            vocabularySize = Integer.parseInt(br.readLine());
+            for (int i = 0; i < vocabularySize; i++){
+                this.vocabulary.add((Symbol) br.readLine());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * Constructor of {@link NGram} class which takes filename to read from text file.
      *
      * @param fileName name of the text file where NGram is saved.
      */
     public NGram(String fileName){
-        String line;
-        String[] items;
-        int vocabularySize;
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(fileName);
         if (inputStream != null){
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-                line = br.readLine();
-                items = line.split(" ");
-                this.N = Integer.parseInt(items[0]);
-                this.lambda1 = Double.parseDouble(items[1]);
-                this.lambda2 = Double.parseDouble(items[2]);
-                this.probabilityOfUnseen = new double[N];
-                line = br.readLine();
-                items = line.split(" ");
-                for (int i = 0; i < N; i++){
-                    this.probabilityOfUnseen[i] = Double.parseDouble(items[i]);
-                }
-                this.vocabulary = new HashSet<>();
-                vocabularySize = Integer.parseInt(br.readLine());
-                for (int i = 0; i < vocabularySize; i++){
-                    this.vocabulary.add((Symbol) br.readLine());
-                }
+                readHeader(br);
                 rootNode = new NGramNode<>(true, br);
                 br.close();
             } catch (IOException e) {
             }
         }
+    }
+
+    /**
+     * Constructor of {@link NGram} class which takes a list of files to read.
+     *
+     * @param fileNameList List of the files where NGram is saved.
+     */
+    public NGram(String... fileNameList){
+        MultipleFile multipleFile = new MultipleFile(fileNameList);
+        readHeader(multipleFile.getBufferedReader());
+        rootNode = new NGramNode<>(true, multipleFile);
+        multipleFile.close();
     }
 
     /**
