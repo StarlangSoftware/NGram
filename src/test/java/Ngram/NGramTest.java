@@ -73,6 +73,23 @@ public class NGramTest extends CorpusTest{
     }
 
     @Test
+    public void testPrune(){
+        simpleBiGram.prune(1.0);
+        assertEquals(1, simpleBiGram.getCount(new String[]{"<s>", "ayşe"}), 0.0);
+        assertEquals(1, simpleBiGram.getCount(new String[]{"ali", "top"}), 0.0);
+        assertEquals(1, simpleBiGram.getCount(new String[]{"topu", "mehmete"}), 0.0);
+        simpleBiGram.prune(0.8);
+        assertEquals(0, simpleBiGram.getCount(new String[]{"<s>", "ayşe"}), 0.0);
+        assertEquals(1, simpleBiGram.getCount(new String[]{"ali", "top"}), 0.0);
+        assertEquals(1, simpleBiGram.getCount(new String[]{"topu", "mehmete"}), 0.0);
+        simpleBiGram.prune(0.7);
+        assertEquals(0, simpleBiGram.getCount(new String[]{"ali", "top"}), 0.0);
+        assertEquals(1, simpleBiGram.getCount(new String[]{"topu", "mehmete"}), 0.0);
+        simpleBiGram.prune(0.6);
+        assertEquals(0, simpleBiGram.getCount(new String[]{"topu", "mehmete"}), 0.0);
+    }
+
+    @Test
     public void testSaveAsText(){
         simpleUniGram.saveAsText("simple1.txt");
         simpleBiGram.saveAsText("simple2.txt");

@@ -4,6 +4,7 @@ import DataStructure.CounterHashMap;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -409,6 +410,37 @@ public class NGramNode<Symbol> implements Serializable {
             return children.get(s.get(index)).generateNextString(s, index + 1);
         }
         return null;
+    }
+
+    public void prune(double threshold, int N){
+        if (N == 0){
+            ArrayList<Integer> counts = new ArrayList<>();
+            for (NGramNode<Symbol> node : children.values()) {
+                counts.add(node.count);
+            }
+            counts.sort((o1, o2) -> o2 - o1);
+            int sum = 0, t = count;
+            for (Integer c : counts){
+                if ((sum + c) / (count + 0.0) >= threshold){
+                    t = c;
+                    break;
+                }
+                sum += c;
+            }
+            ArrayList<Symbol> toBeDeleted = new ArrayList<>();
+            for (Symbol symbol : children.keySet()) {
+                if (children.get(symbol).count < t){
+                    toBeDeleted.add(symbol);
+                }
+            }
+            for (Symbol symbol : toBeDeleted){
+                children.remove(symbol);
+            }
+        } else {
+            for (NGramNode<Symbol> node : children.values()) {
+                node.prune(threshold, N - 1);
+            }
+        }
     }
 
     /**

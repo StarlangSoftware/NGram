@@ -484,6 +484,12 @@ public class NGram<Symbol> implements Serializable{
         probabilityOfUnseen[height - 1] = 1.0 / (vocabularySize() + 1);
     }
 
+    public void prune(double threshold){
+        if (threshold > 0.0 && threshold <= 1.0){
+            rootNode.prune(threshold, N - 1);
+        }
+    }
+
     /**
      * Save this NGram to a text file.
      *
