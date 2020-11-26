@@ -414,22 +414,9 @@ public class NGramNode<Symbol> implements Serializable {
 
     public void prune(double threshold, int N){
         if (N == 0){
-            ArrayList<Integer> counts = new ArrayList<>();
-            for (NGramNode<Symbol> node : children.values()) {
-                counts.add(node.count);
-            }
-            counts.sort((o1, o2) -> o2 - o1);
-            int sum = 0, t = count;
-            for (Integer c : counts){
-                if ((sum + c) / (count + 0.0) >= threshold){
-                    t = c;
-                    break;
-                }
-                sum += c;
-            }
             ArrayList<Symbol> toBeDeleted = new ArrayList<>();
             for (Symbol symbol : children.keySet()) {
-                if (children.get(symbol).count < t){
+                if (children.get(symbol).count / (count + 0.0) < threshold){
                     toBeDeleted.add(symbol);
                 }
             }
