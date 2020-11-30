@@ -91,12 +91,12 @@ public class NGramTest extends CorpusTest{
         simpleBiGram.prune(0.7);
         assertEquals(4, simpleBiGram.getCount(new String[]{"<s>", "ali"}), 0.0);
         assertEquals(3, simpleBiGram.getCount(new String[]{"ali", "topu"}), 0.0);
-        assertEquals(0, simpleBiGram.getCount(new String[]{"topu", "at"}), 0.0);
+        assertEquals(2, simpleBiGram.getCount(new String[]{"topu", "at"}), 0.0);
         simpleBiGram.prune(0.8);
         assertEquals(4, simpleBiGram.getCount(new String[]{"<s>", "ali"}), 0.0);
-        assertEquals(0, simpleBiGram.getCount(new String[]{"ali", "topu"}), 0.0);
+        assertEquals(3, simpleBiGram.getCount(new String[]{"ali", "topu"}), 0.0);
         simpleBiGram.prune(0.9);
-        assertEquals(0, simpleBiGram.getCount(new String[]{"<s>", "ali"}), 0.0);
+        assertEquals(4, simpleBiGram.getCount(new String[]{"<s>", "ali"}), 0.0);
     }
 
     @Test

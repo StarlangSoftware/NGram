@@ -414,14 +414,23 @@ public class NGramNode<Symbol> implements Serializable {
 
     public void prune(double threshold, int N){
         if (N == 0){
+            Symbol maxElement = null;
+            NGramNode<Symbol> maxNode = null;
             ArrayList<Symbol> toBeDeleted = new ArrayList<>();
             for (Symbol symbol : children.keySet()) {
                 if (children.get(symbol).count / (count + 0.0) < threshold){
                     toBeDeleted.add(symbol);
                 }
+                if (maxElement == null || children.get(symbol).count > children.get(maxElement).count){
+                    maxElement = symbol;
+                    maxNode = children.get(symbol);
+                }
             }
             for (Symbol symbol : toBeDeleted){
                 children.remove(symbol);
+            }
+            if (children.size() == 0){
+                children.put(maxElement, maxNode);
             }
         } else {
             for (NGramNode<Symbol> node : children.values()) {
