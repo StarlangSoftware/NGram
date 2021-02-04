@@ -1,7 +1,7 @@
 For Developers
 ============
 
-You can also see [Python](https://github.com/olcaytaner/NGram-Py), [C++](https://github.com/olcaytaner/NGram-CPP), [Swift](https://github.com/olcaytaner/NGram-Swift), or [C#](https://github.com/olcaytaner/NGram-CS) repository.
+You can also see [Python](https://github.com/olcaytaner/NGram-Py), [Cython](https://github.com/olcaytaner/NGram-Cy), [C++](https://github.com/olcaytaner/NGram-CPP), [Swift](https://github.com/olcaytaner/NGram-Swift), or [C#](https://github.com/olcaytaner/NGram-CS) repository.
 
 ## Requirements
 
