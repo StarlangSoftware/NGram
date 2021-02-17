@@ -40,6 +40,9 @@ public class NGramNode<Symbol> implements Serializable {
             }
             String line = br.readLine().trim();
             String[] items = line.split(" ");
+            if (items.length != 4){
+                System.out.println("Error in line -> " + line);
+            }
             this.count = Integer.parseInt(items[0]);
             this.probability = Double.parseDouble(items[1]);
             this.probabilityOfUnseen = Double.parseDouble(items[2]);
@@ -67,6 +70,9 @@ public class NGramNode<Symbol> implements Serializable {
         }
         String line = multipleFile.readLine().trim();
         String[] items = line.split(" ");
+        if (items.length != 4){
+            System.out.println("Error in line -> " + line);
+        }
         this.count = Integer.parseInt(items[0]);
         this.probability = Double.parseDouble(items[1]);
         this.probabilityOfUnseen = Double.parseDouble(items[2]);
