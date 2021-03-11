@@ -86,6 +86,22 @@ public class NGramNode<Symbol> implements Serializable {
         }
     }
 
+    public void merge(NGramNode<Symbol> toBeMerged){
+        if (children != null){
+            for (Symbol symbol : children.keySet()){
+                if (toBeMerged.children.containsKey(symbol)){
+                    children.get(symbol).merge(toBeMerged.children.get(symbol));
+                }
+            }
+            for (Symbol symbol : toBeMerged.children.keySet()){
+                if (!children.containsKey(symbol)){
+                    children.put(symbol, toBeMerged.children.get(symbol));
+                }
+            }
+        }
+        count += toBeMerged.getCount();
+    }
+
     /**
      * Gets count of this node.
      *

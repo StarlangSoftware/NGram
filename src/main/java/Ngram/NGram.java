@@ -10,7 +10,6 @@ import java.util.HashSet;
 
 public class NGram<Symbol> implements Serializable{
 
-
     public NGramNode<Symbol> rootNode;
     private int N;
     private double lambda1, lambda2;
@@ -101,6 +100,14 @@ public class NGram<Symbol> implements Serializable{
         readHeader(multipleFile.getBufferedReader());
         rootNode = new NGramNode<>(true, multipleFile);
         multipleFile.close();
+    }
+
+    public void merge(NGram<Symbol> toBeMerged){
+        if (N != toBeMerged.getN()){
+            return;
+        }
+        vocabulary.addAll(toBeMerged.vocabulary);
+        rootNode.merge(toBeMerged.rootNode);
     }
 
     /**

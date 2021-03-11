@@ -101,9 +101,25 @@ public class NGramTest extends CorpusTest{
 
     @Test
     public void testSaveAsText(){
-        simpleUniGram.saveAsText("simple1.txt");
-        simpleBiGram.saveAsText("simple2.txt");
-        simpleTriGram.saveAsText("simple3.txt");
+        simpleUniGram.saveAsText("simple1a.txt");
+        simpleBiGram.saveAsText("simple2a.txt");
+        simpleTriGram.saveAsText("simple3a.txt");
+    }
+
+    @Test
+    public void testMerge(){
+        simpleUniGram = new NGram<>("simple1a.txt");
+        simpleUniGram.merge(new NGram<>("simple1b.txt"));
+        assertEquals(18, simpleUniGram.vocabularySize(), 0.0);
+        simpleBiGram = new NGram<>("simple2a.txt");
+        simpleBiGram.merge(new NGram<>("simple2b.txt"));
+        simpleBiGram.merge(new NGram<>("simple2c.txt"));
+        simpleBiGram.merge(new NGram<>("simple2d.txt"));
+        assertEquals(21, simpleBiGram.vocabularySize(), 0.0);
+        simpleTriGram = new NGram<>("simple3a.txt");
+        simpleTriGram.merge(new NGram<>("simple3b.txt"));
+        simpleTriGram.merge(new NGram<>("simple3c.txt"));
+        assertEquals(20, simpleTriGram.vocabularySize(), 0.0);
     }
 
     @Test
