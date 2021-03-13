@@ -1,9 +1,8 @@
 package Ngram;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import Util.FileUtils;
+
+import java.io.*;
 
 public class MultipleFile {
 
@@ -14,8 +13,7 @@ public class MultipleFile {
     public MultipleFile(String... fileNameList){
         index = 0;
         this.fileNameList = fileNameList;
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(fileNameList[index]);
+        InputStream inputStream = FileUtils.getInputStream(fileNameList[index]);
         if (inputStream != null){
             br = new BufferedReader(new InputStreamReader(inputStream));
         }
@@ -38,8 +36,7 @@ public class MultipleFile {
             } else {
                 br.close();
                 index++;
-                ClassLoader classLoader = getClass().getClassLoader();
-                InputStream inputStream = classLoader.getResourceAsStream(fileNameList[index]);
+                InputStream inputStream = FileUtils.getInputStream(fileNameList[index]);
                 if (inputStream != null){
                     br = new BufferedReader(new InputStreamReader(inputStream));
                     return br.readLine();

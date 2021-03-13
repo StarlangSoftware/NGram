@@ -1,6 +1,7 @@
 package Ngram;
 
 import DataStructure.CounterHashMap;
+import Util.FileUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -77,8 +78,7 @@ public class NGram<Symbol> implements Serializable{
      * @param fileName name of the text file where NGram is saved.
      */
     public NGram(String fileName){
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+        InputStream inputStream = FileUtils.getInputStream(fileName);
         if (inputStream != null){
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
