@@ -47,7 +47,7 @@ public class NGram<Symbol> implements Serializable{
         rootNode = new NGramNode<>(null);
     }
 
-    public void readHeader(BufferedReader br){
+    private void readHeader(BufferedReader br){
         String line;
         String[] items;
         int vocabularySize;
