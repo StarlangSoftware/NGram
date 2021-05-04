@@ -81,7 +81,7 @@ public class NGram<Symbol> implements Serializable{
         InputStream inputStream = FileUtils.getInputStream(fileName);
         if (inputStream != null){
             try {
-                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
                 readHeader(br);
                 rootNode = new NGramNode<>(true, br);
                 br.close();

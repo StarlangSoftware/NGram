@@ -3,6 +3,7 @@ package Ngram;
 import Util.FileUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class MultipleFile {
 
@@ -15,7 +16,7 @@ public class MultipleFile {
         this.fileNameList = fileNameList;
         InputStream inputStream = FileUtils.getInputStream(fileNameList[index]);
         if (inputStream != null){
-            br = new BufferedReader(new InputStreamReader(inputStream));
+            br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         }
     }
 
@@ -38,7 +39,7 @@ public class MultipleFile {
                 index++;
                 InputStream inputStream = FileUtils.getInputStream(fileNameList[index]);
                 if (inputStream != null){
-                    br = new BufferedReader(new InputStreamReader(inputStream));
+                    br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
                     return br.readLine();
                 }
             }
