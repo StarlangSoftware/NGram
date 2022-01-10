@@ -2,7 +2,7 @@ package Ngram;
 
 import java.util.HashSet;
 
-public class NoSmoothingWithDictionary<Symbol> extends NoSmoothing{
+public class NoSmoothingWithDictionary<Symbol> extends NoSmoothing<Symbol>{
     private HashSet<Symbol> dictionary;
 
     /**
