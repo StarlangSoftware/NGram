@@ -6,7 +6,7 @@
 
     <groupId>io.github.starlangsoftware</groupId>
     <artifactId>NGram</artifactId>
-    <version>1.0.19</version>
+    <version>1.0.20</version>
     <packaging>jar</packaging>
 
     <name>NlpToolkit.NGram</name>
@@ -60,12 +60,12 @@
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>Math</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.7</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>Util</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
