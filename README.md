@@ -1,4 +1,4 @@
-N-Gram [<img src=video1.jpg width="5%">](https://youtu.be/oNWKVUdPUJY)[<img src=video2.jpg width="5%">](https://youtu.be/ZG5m6OFdudI)
+N-Gram
 ============
 
 An N-gram is a sequence of N words: a 2-gram (or bigram) is a two-word sequence of words like “lütfen ödevinizi”, “ödevinizi çabuk”, or ”çabuk veriniz”, and a 3-gram (or trigram) is a three-word sequence of words like “lütfen ödevinizi çabuk”, or “ödevinizi çabuk veriniz”.
