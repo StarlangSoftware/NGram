@@ -15,6 +15,11 @@ The simplest way to do smoothing is to add one to all the bigram counts, before 
 
 One alternative to add-one smoothing is to move a bit less of the probability mass from the seen to the unseen events. Instead of adding 1 to each count, we add a fractional count k. This algorithm is therefore called add-k smoothing.
 
+Video Lectures
+============
+
+[<img src=video1.jpg width="50%">](https://youtu.be/oNWKVUdPUJY)[<img src=video2.jpg width="50%">](https://youtu.be/ZG5m6OFdudI)
+
 For Developers
 ============
 
