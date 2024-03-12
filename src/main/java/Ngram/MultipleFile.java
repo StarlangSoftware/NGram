@@ -9,7 +9,7 @@ public class MultipleFile {
 
     private BufferedReader br;
     private int index;
-    private String[] fileNameList;
+    private final String[] fileNameList;
 
     public MultipleFile(String... fileNameList){
         index = 0;
@@ -23,8 +23,7 @@ public class MultipleFile {
     public void close(){
         try {
             br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         }
     }
 
@@ -43,8 +42,7 @@ public class MultipleFile {
                     return br.readLine();
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         }
         return null;
     }

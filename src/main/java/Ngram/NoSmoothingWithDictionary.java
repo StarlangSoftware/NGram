@@ -3,7 +3,7 @@ package Ngram;
 import java.util.HashSet;
 
 public class NoSmoothingWithDictionary<Symbol> extends NoSmoothing<Symbol>{
-    private HashSet<Symbol> dictionary;
+    private final HashSet<Symbol> dictionary;
 
     /**
      * Constructor of {@link NoSmoothingWithDictionary}
@@ -20,7 +20,7 @@ public class NoSmoothingWithDictionary<Symbol> extends NoSmoothing<Symbol>{
      *              N-gram can be set with this function. If level = 1, N-Gram is treated as UniGram, if level = 2,
      *              N-Gram is treated as Bigram, etc.
      */
-    protected void setProbabilities(NGram nGram, int level) {
+    protected void setProbabilities(NGram<Symbol> nGram, int level) {
         nGram.replaceUnknownWords(dictionary);
         super.setProbabilities(nGram, level);
     }

@@ -1,7 +1,7 @@
 package Ngram;
 
-public class LaplaceSmoothing<Symbol> extends SimpleSmoothing {
-    private double delta;
+public class LaplaceSmoothing<Symbol> extends SimpleSmoothing<Symbol> {
+    private final double delta;
 
     public LaplaceSmoothing(){
         delta = 1.0;
@@ -20,7 +20,7 @@ public class LaplaceSmoothing<Symbol> extends SimpleSmoothing {
      *              N-Gram is treated as Bigram, etc.
      */
     @Override
-    protected void setProbabilities(NGram nGram, int level) {
+    protected void setProbabilities(NGram<Symbol> nGram, int level) {
         nGram.setProbabilityWithPseudoCount(delta, level);
     }
 }

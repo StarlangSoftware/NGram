@@ -2,9 +2,8 @@ package Ngram;
 
 import java.util.HashSet;
 
-public class NoSmoothingWithNonRareWords<Symbol> extends NoSmoothing{
-    private HashSet<Symbol> dictionary;
-    private double probability;
+public class NoSmoothingWithNonRareWords<Symbol> extends NoSmoothing<Symbol>{
+    private final double probability;
 
     /**
      * Constructor of {@link NoSmoothingWithNonRareWords}
@@ -23,8 +22,8 @@ public class NoSmoothingWithNonRareWords<Symbol> extends NoSmoothing{
      *              N-Gram is treated as Bigram, etc.
      *
      */
-    protected void setProbabilities(NGram nGram, int level) {
-        dictionary = nGram.constructDictionaryWithNonRareWords(level, probability);
+    protected void setProbabilities(NGram<Symbol> nGram, int level) {
+        HashSet<Symbol> dictionary = nGram.constructDictionaryWithNonRareWords(level, probability);
         nGram.replaceUnknownWords(dictionary);
         super.setProbabilities(nGram, level);
     }

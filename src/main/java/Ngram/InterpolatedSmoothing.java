@@ -4,15 +4,15 @@ import Sampling.KFoldCrossValidation;
 
 import java.util.ArrayList;
 
-public class InterpolatedSmoothing<Symbol> extends TrainedSmoothing{
+public class InterpolatedSmoothing<Symbol> extends TrainedSmoothing<Symbol>{
     private double lambda1, lambda2;
-    private SimpleSmoothing<Symbol> simpleSmoothing;
+    private final SimpleSmoothing<Symbol> simpleSmoothing;
 
     /**
      * No argument constructor of {@link InterpolatedSmoothing}
      */
     public InterpolatedSmoothing(){
-        this.simpleSmoothing = new GoodTuringSmoothing<Symbol>();
+        this.simpleSmoothing = new GoodTuringSmoothing<>();
     }
 
     /**
@@ -32,10 +32,10 @@ public class InterpolatedSmoothing<Symbol> extends TrainedSmoothing{
      * @param lowerBound Initial lower bound for optimizing the best lambda.
      * @return  Best lambda optimized with k-fold crossvalidation.
      */
-    private double learnBestLambda(NGram[] nGrams, KFoldCrossValidation<ArrayList<Symbol>> kFoldCrossValidation, double lowerBound){
+    private double learnBestLambda(NGram<Symbol>[] nGrams, KFoldCrossValidation<ArrayList<Symbol>> kFoldCrossValidation, double lowerBound){
         double bestPerplexity, bestPrevious = -1, upperBound = 0.999, perplexity, bestLambda = (lowerBound + upperBound) / 2;
         int numberOfParts = 5;
-        ArrayList[] testFolds = new ArrayList[10];
+        ArrayList<ArrayList<Symbol>>[] testFolds = new ArrayList[10];
         for (int i = 0; i < 10; i++){
             testFolds[i] = kFoldCrossValidation.getTestFold(i);
         }
@@ -73,9 +73,9 @@ public class InterpolatedSmoothing<Symbol> extends TrainedSmoothing{
      * @param lowerBound1 Initial lower bound for optimizing the best lambda1.
      * @param lowerBound2 Initial lower bound for optimizing the best lambda2.
      */
-    private double[] learnBestLambdas(NGram[] nGrams, KFoldCrossValidation<ArrayList<Symbol>> kFoldCrossValidation, double lowerBound1, double lowerBound2){
+    private double[] learnBestLambdas(NGram<Symbol>[] nGrams, KFoldCrossValidation<ArrayList<Symbol>> kFoldCrossValidation, double lowerBound1, double lowerBound2){
         double bestPerplexity, upperBound1 = 0.999, upperBound2 = 0.999, bestPrevious = -1, perplexity, bestLambda1 = (lowerBound1 + upperBound1) / 2, bestLambda2 = (lowerBound2 + upperBound2) / 2;
-        ArrayList[] testFolds = new ArrayList[10];
+        ArrayList<ArrayList<Symbol>>[] testFolds = new ArrayList[10];
         int numberOfParts = 5;
         for (int i = 0; i < 10; i++){
             testFolds[i] = kFoldCrossValidation.getTestFold(i);
@@ -122,10 +122,10 @@ public class InterpolatedSmoothing<Symbol> extends TrainedSmoothing{
             return;
         }
         int K = 10;
-        NGram[] nGrams = new NGram[K];
-        KFoldCrossValidation<ArrayList<Symbol>> kFoldCrossValidation = new KFoldCrossValidation<>(corpus, K, 0);
+        NGram<Symbol>[] nGrams = new NGram[K];
+        KFoldCrossValidation<ArrayList<Symbol>> kFoldCrossValidation = new KFoldCrossValidation<ArrayList<Symbol>>(corpus, K, 0);
         for (int i = 0; i < K; i++){
-            nGrams[i] = new NGram<Symbol>(kFoldCrossValidation.getTrainFold(i), N);
+            nGrams[i] = new NGram<>(kFoldCrossValidation.getTrainFold(i), N);
             for (int j = 2; j<= N; j++){
                 nGrams[i].calculateNGramProbabilities(simpleSmoothing, j);
             }
@@ -151,7 +151,7 @@ public class InterpolatedSmoothing<Symbol> extends TrainedSmoothing{
      *
      */
     @Override
-    protected void setProbabilities(NGram nGram, int level) {
+    protected void setProbabilities(NGram<Symbol> nGram, int level) {
         for (int j = 2; j<= nGram.getN(); j++){
             nGram.calculateNGramProbabilities(simpleSmoothing, j);
         }

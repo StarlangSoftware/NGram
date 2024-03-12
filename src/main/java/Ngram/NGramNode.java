@@ -4,7 +4,6 @@ import DataStructure.CounterHashMap;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -50,11 +49,11 @@ public class NGramNode<Symbol> implements Serializable {
             if (numberOfChildren > 0){
                 children = new HashMap<>();
                 for (int i = 0; i < numberOfChildren; i++){
-                    NGramNode<Symbol> childNode = new NGramNode<Symbol>(false, br);
+                    NGramNode<Symbol> childNode = new NGramNode<>(false, br);
                     children.put(childNode.symbol, childNode);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 
@@ -80,7 +79,7 @@ public class NGramNode<Symbol> implements Serializable {
         if (numberOfChildren > 0){
             children = new HashMap<>();
             for (int i = 0; i < numberOfChildren; i++){
-                NGramNode<Symbol> childNode = new NGramNode<Symbol>(false, multipleFile);
+                NGramNode<Symbol> childNode = new NGramNode<>(false, multipleFile);
                 children.put(childNode.symbol, childNode);
             }
         }
@@ -371,7 +370,7 @@ public class NGramNode<Symbol> implements Serializable {
                     childList.add(children.get(symbol));
                 }
             }
-            if (childList.size() > 0) {
+            if (!childList.isEmpty()) {
                 unknown = new NGramNode<>(null);
                 unknown.children = new HashMap<>();
                 int sum = 0;
@@ -451,7 +450,7 @@ public class NGramNode<Symbol> implements Serializable {
             for (Symbol symbol : toBeDeleted){
                 children.remove(symbol);
             }
-            if (children.size() == 0){
+            if (children.isEmpty()){
                 children.put(maxElement, maxNode);
             }
         } else {
@@ -487,7 +486,7 @@ public class NGramNode<Symbol> implements Serializable {
             } else {
                 fw.write(count + " " + probability + " " + probabilityOfUnseen + " 0\n");
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 }

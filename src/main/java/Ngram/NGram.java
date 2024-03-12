@@ -5,6 +5,8 @@ import Util.FileUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,9 +32,10 @@ public class NGram<Symbol> implements Serializable{
         this.N = N;
         this.vocabulary = new HashSet<>();
         probabilityOfUnseen = new double[N];
-        rootNode = new NGramNode<Symbol>(null);
-        for (i = 0; i < corpus.size(); i++)
+        rootNode = new NGramNode<>(null);
+        for (i = 0; i < corpus.size(); i++) {
             addNGramSentence((Symbol[]) corpus.get(i).toArray());
+        }
     }
 
     /**
@@ -68,8 +71,7 @@ public class NGram<Symbol> implements Serializable{
             for (int i = 0; i < vocabularySize; i++){
                 this.vocabulary.add((Symbol) br.readLine());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         }
     }
     /**
@@ -85,7 +87,7 @@ public class NGram<Symbol> implements Serializable{
                 readHeader(br);
                 rootNode = new NGramNode<>(true, br);
                 br.close();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
     }
@@ -167,7 +169,6 @@ public class NGram<Symbol> implements Serializable{
 
     /**
      * Sets lambda, interpolation ratio, for bigram and unigram probabilities.
-     *
      * ie. lambda1 * bigramProbability + (1 - lambda1) * unigramProbability
      *
      * @param lambda1 interpolation ratio for bigram probabilities
@@ -505,7 +506,7 @@ public class NGram<Symbol> implements Serializable{
     public void saveAsText(String fileName){
         BufferedWriter fw;
         try {
-            fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8));
+            fw = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get(fileName)), StandardCharsets.UTF_8));
             fw.write(N + " " + lambda1 + " " + lambda2 + "\n");
             for (int i = 0; i < N; i++){
                 fw.write(probabilityOfUnseen[i] + " ");
@@ -517,7 +518,7 @@ public class NGram<Symbol> implements Serializable{
             }
             rootNode.saveAsText(true, fw, 0);
             fw.close();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 
@@ -533,8 +534,7 @@ public class NGram<Symbol> implements Serializable{
             outFile = new FileOutputStream(fileName);
             outObject = new ObjectOutputStream (outFile);
             outObject.writeObject(this);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         }
     }
 

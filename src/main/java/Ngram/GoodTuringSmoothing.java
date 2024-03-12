@@ -4,7 +4,7 @@ import Math.*;
 
 import java.util.ArrayList;
 
-public class GoodTuringSmoothing<Symbol> extends SimpleSmoothing {
+public class GoodTuringSmoothing<Symbol> extends SimpleSmoothing<Symbol> {
 
     /**
      * Given counts of counts, this function will calculate the estimated counts of counts c$^*$ with
@@ -17,8 +17,8 @@ public class GoodTuringSmoothing<Symbol> extends SimpleSmoothing {
      */
     private double[] linearRegressionOnCountsOfCounts(int[] countsOfCounts){
         double[] N = new double[countsOfCounts.length];
-        ArrayList<Integer> r = new ArrayList<Integer>();
-        ArrayList<Integer> c = new ArrayList<Integer>();
+        ArrayList<Integer> r = new ArrayList<>();
+        ArrayList<Integer> c = new ArrayList<>();
         double xt, rt;
         for (int i = 1; i < countsOfCounts.length; i++) {
             if (countsOfCounts[i] != 0) {
@@ -54,8 +54,7 @@ public class GoodTuringSmoothing<Symbol> extends SimpleSmoothing {
             for (int i = 1; i < countsOfCounts.length; i++){
                 N[i] = Math.exp(Math.log(i) * w1 + w0);
             }
-        } catch (DeterminantZero | MatrixColumnMismatch columnMismatch) {
-        } catch (MatrixNotSquare matrixNotSquare) {
+        } catch (MatrixNotSquare | DeterminantZero | MatrixColumnMismatch ignored) {
         }
         return N;
     }
@@ -68,7 +67,7 @@ public class GoodTuringSmoothing<Symbol> extends SimpleSmoothing {
      *              N-gram can be set with this function. If level = 1, N-Gram is treated as UniGram, if level = 2,
      *              N-Gram is treated as Bigram, etc.
      */
-    protected void setProbabilities(NGram nGram, int level) {
+    protected void setProbabilities(NGram<Symbol> nGram, int level) {
         int[] countsOfCounts = nGram.calculateCountsOfCounts(level);
         double[] N = linearRegressionOnCountsOfCounts(countsOfCounts);
         double sum = 0;

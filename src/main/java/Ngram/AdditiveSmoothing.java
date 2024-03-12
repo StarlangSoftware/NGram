@@ -4,7 +4,7 @@ import Sampling.KFoldCrossValidation;
 
 import java.util.ArrayList;
 
-public class AdditiveSmoothing<Symbol> extends TrainedSmoothing {
+public class AdditiveSmoothing<Symbol> extends TrainedSmoothing<Symbol> {
     /**
      * Additive pseudocount parameter used in Additive Smoothing. The parameter will be learned using 10-fold cross
      * validation.
@@ -20,7 +20,7 @@ public class AdditiveSmoothing<Symbol> extends TrainedSmoothing {
      * @param lowerBound Initial lower bound for optimizing the best delta.
      * @return Best delta optimized with k-fold crossvalidation.
      */
-    private double learnBestDelta(NGram[] nGrams, KFoldCrossValidation<ArrayList<Symbol>> kFoldCrossValidation, double lowerBound){
+    private double learnBestDelta(NGram<Symbol>[] nGrams, KFoldCrossValidation<ArrayList<Symbol>> kFoldCrossValidation, double lowerBound){
         double bestPerplexity, bestPrevious = -1, upperBound = 1, perplexity, bestDelta = (lowerBound + upperBound) / 2;
         int numberOfParts = 5;
         while (true){
@@ -56,10 +56,10 @@ public class AdditiveSmoothing<Symbol> extends TrainedSmoothing {
      */
     protected void learnParameters(ArrayList corpus, int N) {
         int K = 10;
-        NGram[] nGrams = new NGram[K];
-        KFoldCrossValidation<ArrayList<Symbol>> kFoldCrossValidation = new KFoldCrossValidation<>(corpus, K, 0);
+        NGram<Symbol>[] nGrams = new NGram[K];
+        KFoldCrossValidation<ArrayList<Symbol>> kFoldCrossValidation = new KFoldCrossValidation<ArrayList<Symbol>>(corpus, K, 0);
         for (int i = 0; i < K; i++){
-            nGrams[i] = new NGram<Symbol>(kFoldCrossValidation.getTrainFold(i), N);
+            nGrams[i] = new NGram<>(kFoldCrossValidation.getTrainFold(i), N);
         }
         delta = learnBestDelta(nGrams, kFoldCrossValidation, 0.1);
     }
@@ -71,7 +71,7 @@ public class AdditiveSmoothing<Symbol> extends TrainedSmoothing {
      *              N-gram can be set with this function. If level = 1, N-Gram is treated as UniGram, if level = 2,
      *              N-Gram is treated as Bigram, etc.
      */
-    protected void setProbabilities(NGram nGram, int level) {
+    protected void setProbabilities(NGram<Symbol> nGram, int level) {
         nGram.setProbabilityWithPseudoCount(delta, level);
     }
 
