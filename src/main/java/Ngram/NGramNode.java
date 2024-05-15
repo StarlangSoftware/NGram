@@ -85,6 +85,10 @@ public class NGramNode<Symbol> implements Serializable {
         }
     }
 
+    /**
+     * Merges this NGramNode with the corresponding NGramNode in another NGram.
+     * @param toBeMerged Parallel NGramNode of the parallel NGram tree.
+     */
     public void merge(NGramNode<Symbol> toBeMerged){
         if (children != null){
             for (Symbol symbol : children.keySet()){
@@ -433,6 +437,12 @@ public class NGramNode<Symbol> implements Serializable {
         return null;
     }
 
+    /**
+     * Prunes the NGramNode according to the given threshold. Removes the child(ren) whose probability is less than the
+     * threshold.
+     * @param threshold Threshold for pruning the NGram tree.
+     * @param N N in N-Gram.
+     */
     public void prune(double threshold, int N){
         if (N == 0){
             Symbol maxElement = null;

@@ -11,6 +11,12 @@ public class MultipleFile {
     private int index;
     private final String[] fileNameList;
 
+    /**
+     * Constructor for {@link MultipleFile} class. Initializes the buffer reader with the first input file
+     * from the fileNameList. MultipleFile supports simple multipart file system, where a text file is divided
+     * into multiple files.
+     * @param fileNameList A list of files given as dynamic parameters.
+     */
     public MultipleFile(String... fileNameList){
         index = 0;
         this.fileNameList = fileNameList;
@@ -20,6 +26,9 @@ public class MultipleFile {
         }
     }
 
+    /**
+     * Closes the buffer reader.
+     */
     public void close(){
         try {
             br.close();
@@ -27,6 +36,12 @@ public class MultipleFile {
         }
     }
 
+    /**
+     * Reads a single line from the current file. If the end of file is reached for the current file,
+     * next file is opened and a single line from that file is read. If all files are read, the method
+     * returns null.
+     * @return Read line from the current file.
+     */
     public String readLine(){
         String tmpLine;
         try {
@@ -47,6 +62,10 @@ public class MultipleFile {
         return null;
     }
 
+    /**
+     * Accessor for the buffered reader
+     * @return Buffered reader
+     */
     public BufferedReader getBufferedReader(){
         return br;
     }

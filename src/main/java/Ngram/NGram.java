@@ -50,6 +50,10 @@ public class NGram<Symbol> implements Serializable{
         rootNode = new NGramNode<>(null);
     }
 
+    /**
+     * Reads the header from the input file.
+     * @param br Input file
+     */
     private void readHeader(BufferedReader br){
         String line;
         String[] items;
@@ -74,6 +78,7 @@ public class NGram<Symbol> implements Serializable{
         } catch (IOException ignored) {
         }
     }
+
     /**
      * Constructor of {@link NGram} class which takes filename to read from text file.
      *
@@ -104,6 +109,11 @@ public class NGram<Symbol> implements Serializable{
         multipleFile.close();
     }
 
+    /**
+     * Merges current NGram with the given NGram. If N of the two NGram's are not same, it does not
+     * merge. Merges first the vocabulary, then the NGram trees.
+     * @param toBeMerged NGram to be merged with.
+     */
     public void merge(NGram<Symbol> toBeMerged){
         if (N != toBeMerged.getN()){
             return;
@@ -492,6 +502,11 @@ public class NGram<Symbol> implements Serializable{
         probabilityOfUnseen[height - 1] = 1.0 / (vocabularySize() + 1);
     }
 
+    /**
+     * Prunes NGram according to the given threshold. All nodes having a probability less than the threshold will be
+     * pruned.
+     * @param threshold Probability threshold used for pruning.
+     */
     public void prune(double threshold){
         if (threshold > 0.0 && threshold <= 1.0){
             rootNode.prune(threshold, N - 1);
